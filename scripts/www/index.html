@@ -1,11 +1,1506 @@
 <!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>PakePlus</title>
-    </head>
-    <body>
-        PakePlus
-    </body>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📚 我的书库 | 书籍管理助手</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3a0ca3;
+            --accent: #f72585;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #4cc9f0;
+            --warning: #f8961e;
+            --danger: #f94144;
+            --card-bg: #ffffff;
+            --shadow: rgba(0, 0, 0, 0.08);
+            --border-radius: 12px;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: var(--border-radius);
+            box-shadow: 0 8px 25px var(--shadow);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .logo {
+            font-size: 3.5rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            color: var(--secondary);
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .tagline {
+            font-size: 1.2rem;
+            color: #666;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 25px;
+            box-shadow: 0 6px 15px var(--shadow);
+            display: flex;
+            align-items: center;
+            transition: var(--transition);
+            border-left: 5px solid var(--primary);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-icon {
+            font-size: 2.5rem;
+            margin-right: 20px;
+            color: var(--primary);
+        }
+
+        .stat-info h3 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+            color: var(--dark);
+        }
+
+        .stat-info p {
+            color: #666;
+            font-weight: 500;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: 0 8px 25px var(--shadow);
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .card-icon {
+            font-size: 1.8rem;
+            margin-right: 15px;
+            color: var(--primary);
+            background: rgba(67, 97, 238, 0.1);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            color: var(--secondary);
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 14px 18px;
+            font-size: 1rem;
+            border: 2px solid #e1e5eb;
+            border-radius: 8px;
+            transition: var(--transition);
+            background: #f8f9fa;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+            background: white;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 14px 28px;
+            font-size: 1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+            width: 100%;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 15px rgba(67, 97, 238, 0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 15px rgba(108, 117, 125, 0.4);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #38b000 0%, #2d7d46 100%);
+            color: white;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #e63946 0%, #d00000 100%);
+            color: white;
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #ff9e00 0%, #ff9100 100%);
+            color: white;
+        }
+
+        .btn-info {
+            background: linear-gradient(135deg, #00b4d8 0%, #0077b6 100%);
+            color: white;
+        }
+
+        .btn-sm {
+            padding: 8px 16px;
+            font-size: 0.9rem;
+            width: auto;
+        }
+
+        .books-list {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-top: 20px;
+            border-radius: 8px;
+            border: 1px solid #e1e5eb;
+        }
+
+        .book-item {
+            padding: 15px;
+            border-bottom: 1px solid #e1e5eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: var(--transition);
+        }
+
+        .book-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .book-item:last-child {
+            border-bottom: none;
+        }
+
+        .book-info h4 {
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+            color: var(--dark);
+        }
+
+        .book-meta {
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+
+        .book-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .search-result {
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .result-found {
+            background-color: rgba(76, 201, 240, 0.1);
+            border-left: 4px solid var(--success);
+        }
+
+        .result-not-found {
+            background-color: rgba(249, 65, 68, 0.1);
+            border-left: 4px solid var(--danger);
+        }
+
+        .action-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 40px;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 60px;
+            padding: 20px;
+            color: #6c757d;
+            font-size: 0.9rem;
+            border-top: 1px solid #dee2e6;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #6c757d;
+        }
+
+        .empty-icon {
+            font-size: 4rem;
+            color: #adb5bd;
+            margin-bottom: 20px;
+        }
+
+        .mobile-tip {
+            display: none;
+            background: rgba(67, 97, 238, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-size: 0.9rem;
+        }
+
+        /* 表格样式 */
+        .books-table-container {
+            overflow-x: auto;
+            margin-top: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .books-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        .books-table th {
+            background: var(--primary);
+            color: white;
+            font-weight: 600;
+            text-align: left;
+            padding: 15px;
+            position: sticky;
+            top: 0;
+        }
+
+        .books-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e1e5eb;
+        }
+
+        .books-table tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .books-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* 导入导出区域样式 */
+        .import-export-section {
+            background: rgba(67, 97, 238, 0.05);
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 30px;
+            border: 2px dashed rgba(67, 97, 238, 0.3);
+        }
+
+        .format-options {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .format-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: 6px;
+            background: white;
+            border: 1px solid #dee2e6;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .format-btn:hover {
+            background: #f8f9fa;
+            border-color: var(--primary);
+        }
+
+        .format-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .data-preview {
+            margin-top: 20px;
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #e1e5eb;
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+
+        .template-download {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .stats-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .action-buttons {
+                grid-template-columns: 1fr;
+            }
+            
+            .mobile-tip {
+                display: block;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+            
+            .format-options {
+                flex-direction: column;
+            }
+        }
+
+        /* 滚动条样式 */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary);
+        }
+
+        /* 动画效果 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        /* 模态框样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 700px;
+            max-height: 80vh;
+            overflow: auto;
+            padding: 30px;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 页头 -->
+        <header class="fade-in">
+            <div class="logo">
+                <i class="fas fa-book-open"></i>
+            </div>
+            <h1>我的书库</h1>
+            <p class="tagline">记录您买过的每一本书，轻松管理个人藏书，避免重复购买</p>
+        </header>
+
+        <!-- 统计卡片 -->
+        <div class="stats-cards fade-in">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-book"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="totalBooks">0</h3>
+                    <p>藏书总数</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-calendar-alt"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="last30Days">0</h3>
+                    <p>最近30天新增</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-star"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="thisYear">0</h3>
+                    <p>今年新增</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-history"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="lastAdded">-</h3>
+                    <p>最近添加时间</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 主要内容区域 -->
+        <div class="main-content">
+            <!-- 添加新书 -->
+            <div class="card fade-in">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-plus-circle"></i>
+                    </div>
+                    <h2 class="card-title">添加新书</h2>
+                </div>
+                
+                <div class="form-group">
+                    <label for="bookTitle"><i class="fas fa-heading"></i> 书名 *</label>
+                    <input type="text" id="bookTitle" class="form-control" placeholder="请输入书名（必填）" autocomplete="off">
+                </div>
+                
+                <div class="form-group">
+                    <label for="bookAuthor"><i class="fas fa-user-edit"></i> 作者</label>
+                    <input type="text" id="bookAuthor" class="form-control" placeholder="作者（可选）" autocomplete="off">
+                </div>
+                
+                <div class="form-group">
+                    <label for="purchaseDate"><i class="fas fa-calendar"></i> 购买日期</label>
+                    <input type="date" id="purchaseDate" class="form-control">
+                </div>
+                
+                <button id="addBookBtn" class="btn btn-primary">
+                    <i class="fas fa-save"></i> 添加到书库
+                </button>
+                
+                <div id="duplicateWarning" style="display: none; margin-top: 15px; padding: 12px; background: rgba(255, 193, 7, 0.1); border-radius: 8px; border-left: 4px solid #ffc107;">
+                    <i class="fas fa-exclamation-triangle"></i> 这本书已经在您的书库中了！
+                </div>
+            </div>
+
+            <!-- 查询书籍 -->
+            <div class="card fade-in">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h2 class="card-title">查询书籍</h2>
+                </div>
+                
+                <div class="form-group">
+                    <label for="searchInput"><i class="fas fa-search"></i> 输入书名查询</label>
+                    <input type="text" id="searchInput" class="form-control" placeholder="输入书名或作者查询是否已购买" autocomplete="off">
+                </div>
+                
+                <button id="searchBtn" class="btn btn-secondary">
+                    <i class="fas fa-search"></i> 查询
+                </button>
+                
+                <div id="searchResult" class="search-result">
+                    <!-- 查询结果将在这里显示 -->
+                </div>
+            </div>
+        </div>
+
+        <!-- 书籍列表 -->
+        <div class="card fade-in">
+            <div class="card-header">
+                <div class="card-icon">
+                    <i class="fas fa-list"></i>
+                </div>
+                <h2 class="card-title">我的藏书列表</h2>
+                <div style="margin-left: auto; display: flex; align-items: center; gap: 10px;">
+                    <span style="background: var(--primary); color: white; padding: 5px 12px; border-radius: 20px; font-weight: 600;">
+                        <i class="fas fa-book"></i> <span id="booksCount">0</span> 本
+                    </span>
+                    <button class="btn btn-sm btn-info" onclick="toggleViewMode()" id="toggleViewBtn">
+                        <i class="fas fa-table"></i> 切换表格视图
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 卡片视图 -->
+            <div id="cardView" class="books-list">
+                <div class="empty-state" id="emptyStateCard">
+                    <div class="empty-icon">
+                        <i class="fas fa-book-open"></i>
+                    </div>
+                    <h3>书库空空如也</h3>
+                    <p>点击上方"添加新书"开始记录您的第一本书吧！</p>
+                </div>
+            </div>
+            
+            <!-- 表格视图 -->
+            <div id="tableView" class="books-table-container" style="display: none;">
+                <table class="books-table">
+                    <thead>
+                        <tr>
+                            <th width="5%">#</th>
+                            <th width="45%">书名</th>
+                            <th width="25%">作者</th>
+                            <th width="15%">购买日期</th>
+                            <th width="10%">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="booksTableBody">
+                        <!-- 表格数据将在这里显示 -->
+                    </tbody>
+                </table>
+                <div class="empty-state" id="emptyStateTable" style="display: none;">
+                    <div class="empty-icon">
+                        <i class="fas fa-book-open"></i>
+                    </div>
+                    <h3>书库空空如也</h3>
+                    <p>点击上方"添加新书"开始记录您的第一本书吧！</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 导入导出区域 -->
+        <div class="card fade-in import-export-section">
+            <div class="card-header">
+                <div class="card-icon">
+                    <i class="fas fa-file-import"></i>
+                </div>
+                <h2 class="card-title">数据导入/导出</h2>
+            </div>
+            
+            <p style="margin-bottom: 15px;">支持多种格式导入导出，推荐使用Excel/CSV格式，方便在表格软件中编辑</p>
+            
+            <div class="format-options">
+                <div class="format-btn active" data-format="csv" onclick="selectFormat('csv')">
+                    <i class="fas fa-file-csv"></i> CSV格式
+                </div>
+                <div class="format-btn" data-format="excel" onclick="selectFormat('excel')">
+                    <i class="fas fa-file-excel"></i> Excel格式
+                </div>
+                <div class="format-btn" data-format="json" onclick="selectFormat('json')">
+                    <i class="fas fa-file-code"></i> JSON格式
+                </div>
+            </div>
+            
+            <div class="action-buttons" style="margin-top: 25px;">
+                <button onclick="exportData()" class="btn btn-success">
+                    <i class="fas fa-file-export"></i> 导出书库数据
+                </button>
+                <button onclick="importData()" class="btn btn-warning">
+                    <i class="fas fa-file-import"></i> 导入书库数据
+                </button>
+                <button onclick="downloadTemplate()" class="btn btn-info">
+                    <i class="fas fa-download"></i> 下载模板文件
+                </button>
+                <button onclick="showBatchAddModal()" class="btn btn-secondary">
+                    <i class="fas fa-layer-group"></i> 批量添加书籍
+                </button>
+            </div>
+            
+            <div class="template-download">
+                <p style="margin-top: 20px; font-size: 0.9rem; color: #666;">
+                    <i class="fas fa-info-circle"></i> 提示：下载模板文件后，在Excel中填写书籍信息，然后使用导入功能
+                </p>
+            </div>
+        </div>
+
+        <!-- 页脚 -->
+        <div class="footer fade-in">
+            <p>© 2023 我的书库 | 书籍管理助手 | 数据存储在您的浏览器本地，请定期备份</p>
+            <p style="margin-top: 10px; font-size: 0.8rem;">
+                <i class="fas fa-info-circle"></i> 提示：数据保存在浏览器本地存储中，清除浏览器数据会丢失书库信息，请定期导出备份
+            </p>
+        </div>
+    </div>
+
+    <!-- 批量添加模态框 -->
+    <div class="modal" id="batchAddModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeBatchAddModal()">&times;</button>
+            <h2 style="margin-bottom: 20px;"><i class="fas fa-layer-group"></i> 批量添加书籍</h2>
+            
+            <div class="form-group">
+                <label>批量输入书籍（每行一本书，格式：书名,作者,购买日期）</label>
+                <textarea id="batchBooksInput" class="form-control" rows="10" placeholder="示例：
+红楼梦,曹雪芹,2023-10-15
+活着,余华,2023-09-20
+三体,刘慈欣,2023-08-05
+
+注意：每行一本书，书名必填，作者和购买日期可选，用逗号分隔"></textarea>
+            </div>
+            
+            <div style="display: flex; gap: 15px; margin-top: 20px;">
+                <button class="btn btn-success" onclick="processBatchAdd()">
+                    <i class="fas fa-plus-circle"></i> 批量添加
+                </button>
+                <button class="btn btn-secondary" onclick="closeBatchAddModal()">
+                    <i class="fas fa-times"></i> 取消
+                </button>
+            </div>
+            
+            <div id="batchAddResult" style="margin-top: 20px; display: none;">
+                <!-- 批量添加结果将在这里显示 -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 全局变量
+        let currentExportFormat = 'csv';
+        let currentViewMode = 'card'; // 'card' 或 'table'
+        
+        // 从本地存储获取书籍数据
+        function getBooks() {
+            const booksJson = localStorage.getItem('myBookLibrary');
+            return booksJson ? JSON.parse(booksJson) : [];
+        }
+        
+        // 保存书籍数据到本地存储
+        function saveBooks(books) {
+            localStorage.setItem('myBookLibrary', JSON.stringify(books));
+            updateBookList();
+            updateStatistics();
+        }
+        
+        // 页面加载时初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 设置默认购买日期为今天
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('purchaseDate').value = today;
+            
+            // 初始化书籍列表和统计
+            updateBookList();
+            updateStatistics();
+            
+            // 监听添加书籍按钮
+            document.getElementById('addBookBtn').addEventListener('click', addBook);
+            
+            // 监听查询按钮
+            document.getElementById('searchBtn').addEventListener('click', searchBook);
+            
+            // 监听回车键
+            document.getElementById('bookTitle').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') addBook();
+            });
+            
+            document.getElementById('searchInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') searchBook();
+            });
+            
+            // 初始化视图模式
+            updateViewMode();
+        });
+        
+        // 选择导出格式
+        function selectFormat(format) {
+            currentExportFormat = format;
+            
+            // 更新按钮样式
+            document.querySelectorAll('.format-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            document.querySelector(`.format-btn[data-format="${format}"]`).classList.add('active');
+        }
+        
+        // 切换视图模式
+        function toggleViewMode() {
+            currentViewMode = currentViewMode === 'card' ? 'table' : 'card';
+            updateViewMode();
+        }
+        
+        // 更新视图模式
+        function updateViewMode() {
+            const cardView = document.getElementById('cardView');
+            const tableView = document.getElementById('tableView');
+            const toggleBtn = document.getElementById('toggleViewBtn');
+            
+            if (currentViewMode === 'card') {
+                cardView.style.display = 'block';
+                tableView.style.display = 'none';
+                toggleBtn.innerHTML = '<i class="fas fa-table"></i> 切换表格视图';
+            } else {
+                cardView.style.display = 'none';
+                tableView.style.display = 'block';
+                toggleBtn.innerHTML = '<i class="fas fa-list"></i> 切换卡片视图';
+                updateTableView();
+            }
+        }
+        
+        // 添加新书
+        function addBook() {
+            const title = document.getElementById('bookTitle').value.trim();
+            const author = document.getElementById('bookAuthor').value.trim();
+            const date = document.getElementById('purchaseDate').value;
+            
+            if (!title) {
+                showMessage('请输入书名', 'warning');
+                document.getElementById('bookTitle').focus();
+                return;
+            }
+            
+            const books = getBooks();
+            
+            // 检查是否已存在（不区分大小写）
+            const isDuplicate = books.some(book => 
+                book.title.toLowerCase() === title.toLowerCase()
+            );
+            
+            if (isDuplicate) {
+                document.getElementById('duplicateWarning').style.display = 'block';
+                
+                // 3秒后自动隐藏
+                setTimeout(() => {
+                    document.getElementById('duplicateWarning').style.display = 'none';
+                }, 5000);
+                
+                if (!confirm('这本书已经在您的书库中了，确定要重复添加吗？')) {
+                    return;
+                }
+            }
+            
+            // 添加新书
+            const newBook = {
+                id: Date.now(),
+                title: title,
+                author: author || '未知作者',
+                purchaseDate: date || new Date().toISOString().split('T')[0],
+                addDate: new Date().toISOString(),
+                addDateDisplay: new Date().toLocaleDateString('zh-CN')
+            };
+            
+            books.unshift(newBook); // 添加到开头
+            saveBooks(books);
+            
+            // 清空输入框
+            document.getElementById('bookTitle').value = '';
+            document.getElementById('bookAuthor').value = '';
+            
+            // 显示成功消息
+            showMessage(`《${title}》已成功添加到书库！`, 'success');
+        }
+        
+        // 查询书籍
+        function searchBook() {
+            const searchText = document.getElementById('searchInput').value.trim().toLowerCase();
+            const resultDiv = document.getElementById('searchResult');
+            
+            if (!searchText) {
+                showMessage('请输入要查询的书名或作者', 'warning');
+                document.getElementById('searchInput').focus();
+                return;
+            }
+            
+            const books = getBooks();
+            
+            // 查找匹配的书籍
+            const matchedBooks = books.filter(book => 
+                book.title.toLowerCase().includes(searchText) ||
+                book.author.toLowerCase().includes(searchText)
+            );
+            
+            if (matchedBooks.length > 0) {
+                resultDiv.className = 'search-result result-found';
+                let html = `<h4><i class="fas fa-check-circle"></i> 找到 ${matchedBooks.length} 本相关书籍</h4>`;
+                
+                matchedBooks.forEach(book => {
+                    html += `
+                        <div style="margin-top: 10px; padding: 10px; background: white; border-radius: 6px;">
+                            <div><strong>${book.title}</strong></div>
+                            <div>作者: ${book.author}</div>
+                            <div style="font-size: 0.9rem; color: #6c757d;">添加日期: ${book.addDateDisplay}</div>
+                        </div>
+                    `;
+                });
+                
+                resultDiv.innerHTML = html;
+            } else {
+                resultDiv.className = 'search-result result-not-found';
+                resultDiv.innerHTML = `
+                    <h4><i class="fas fa-times-circle"></i> 未找到相关书籍</h4>
+                    <p>您可能还没有购买这本书，可以点击"添加新书"将其加入书库。</p>
+                `;
+            }
+            
+            resultDiv.style.display = 'block';
+        }
+        
+        // 更新书籍列表显示（卡片视图）
+        function updateBookList() {
+            const books = getBooks();
+            const cardView = document.getElementById('cardView');
+            const emptyStateCard = document.getElementById('emptyStateCard');
+            const booksCount = document.getElementById('booksCount');
+            
+            booksCount.textContent = books.length;
+            
+            if (books.length === 0) {
+                if (!emptyStateCard) {
+                    const emptyState = document.createElement('div');
+                    emptyState.className = 'empty-state';
+                    emptyState.id = 'emptyStateCard';
+                    emptyState.innerHTML = `
+                        <div class="empty-icon">
+                            <i class="fas fa-book-open"></i>
+                        </div>
+                        <h3>书库空空如也</h3>
+                        <p>点击上方"添加新书"开始记录您的第一本书吧！</p>
+                    `;
+                    cardView.innerHTML = '';
+                    cardView.appendChild(emptyState);
+                } else {
+                    emptyStateCard.style.display = 'block';
+                }
+                
+                // 更新表格视图
+                updateTableView();
+                return;
+            }
+            
+            // 隐藏空状态
+            if (emptyStateCard) emptyStateCard.style.display = 'none';
+            
+            let html = '';
+            books.forEach((book, index) => {
+                html += `
+                    <div class="book-item">
+                        <div class="book-info">
+                            <h4>${index + 1}. ${book.title}</h4>
+                            <div class="book-meta">
+                                <i class="fas fa-user"></i> ${book.author} 
+                                <span style="margin-left: 15px;"><i class="fas fa-calendar"></i> ${book.purchaseDate}</span>
+                                <span style="margin-left: 15px;"><i class="fas fa-clock"></i> ${book.addDateDisplay}</span>
+                            </div>
+                        </div>
+                        <div class="book-actions">
+                            <button class="btn btn-danger btn-sm" onclick="deleteBook(${book.id})">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            cardView.innerHTML = html;
+            
+            // 更新表格视图
+            updateTableView();
+        }
+        
+        // 更新表格视图
+        function updateTableView() {
+            const books = getBooks();
+            const tableBody = document.getElementById('booksTableBody');
+            const emptyStateTable = document.getElementById('emptyStateTable');
+            
+            if (books.length === 0) {
+                tableBody.innerHTML = '';
+                if (emptyStateTable) emptyStateTable.style.display = 'block';
+                return;
+            }
+            
+            // 隐藏空状态
+            if (emptyStateTable) emptyStateTable.style.display = 'none';
+            
+            let html = '';
+            books.forEach((book, index) => {
+                html += `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${book.title}</td>
+                        <td>${book.author}</td>
+                        <td>${book.purchaseDate}</td>
+                        <td>
+                            <button class="btn btn-danger btn-sm" onclick="deleteBook(${book.id})">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            tableBody.innerHTML = html;
+        }
+        
+        // 删除书籍
+        function deleteBook(id) {
+            if (!confirm('确定要从书库中删除这本书吗？')) return;
+            
+            let books = getBooks();
+            books = books.filter(book => book.id !== id);
+            saveBooks(books);
+            
+            showMessage('书籍已删除', 'success');
+        }
+        
+        // 更新统计信息
+        function updateStatistics() {
+            const books = getBooks();
+            const totalBooks = document.getElementById('totalBooks');
+            const last30Days = document.getElementById('last30Days');
+            const thisYear = document.getElementById('thisYear');
+            const lastAdded = document.getElementById('lastAdded');
+            
+            // 更新总数
+            totalBooks.textContent = books.length;
+            
+            // 计算最近30天新增
+            const thirtyDaysAgo = new Date();
+            thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+            
+            const recentBooks = books.filter(book => {
+                const bookDate = new Date(book.addDate);
+                return bookDate >= thirtyDaysAgo;
+            });
+            
+            last30Days.textContent = recentBooks.length;
+            
+            // 计算今年新增
+            const currentYear = new Date().getFullYear();
+            const thisYearBooks = books.filter(book => {
+                const bookDate = new Date(book.addDate);
+                return bookDate.getFullYear() === currentYear;
+            });
+            
+            thisYear.textContent = thisYearBooks.length;
+            
+            // 更新最近添加时间
+            if (books.length > 0) {
+                const latestBook = books[0];
+                lastAdded.textContent = latestBook.addDateDisplay;
+            } else {
+                lastAdded.textContent = '-';
+            }
+        }
+        
+        // 导出数据
+        function exportData() {
+            const books = getBooks();
+            if (books.length === 0) {
+                showMessage('书库为空，没有数据可以导出', 'warning');
+                return;
+            }
+            
+            if (currentExportFormat === 'json') {
+                exportAsJSON(books);
+            } else if (currentExportFormat === 'csv') {
+                exportAsCSV(books);
+            } else if (currentExportFormat === 'excel') {
+                exportAsExcel(books);
+            }
+        }
+        
+        // 导出为JSON格式
+        function exportAsJSON(books) {
+            const dataStr = JSON.stringify(books, null, 2);
+            const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+            
+            const exportFileDefaultName = `我的书库备份_${new Date().toISOString().split('T')[0]}.json`;
+            
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', exportFileDefaultName);
+            linkElement.click();
+            
+            showMessage(`已导出 ${books.length} 本书籍数据 (JSON格式)`, 'success');
+        }
+        
+        // 导出为CSV格式
+        function exportAsCSV(books) {
+            // CSV标题行
+            let csvContent = "书名,作者,购买日期,添加日期\n";
+            
+            // 添加数据行
+            books.forEach(book => {
+                const row = [
+                    `"${book.title.replace(/"/g, '""')}"`,
+                    `"${book.author.replace(/"/g, '""')}"`,
+                    `"${book.purchaseDate}"`,
+                    `"${book.addDateDisplay}"`
+                ].join(',');
+                csvContent += row + '\n';
+            });
+            
+            const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            
+            const link = document.createElement('a');
+            link.setAttribute('href', url);
+            link.setAttribute('download', `我的书库备份_${new Date().toISOString().split('T')[0]}.csv`);
+            link.click();
+            
+            showMessage(`已导出 ${books.length} 本书籍数据 (CSV格式)`, 'success');
+        }
+        
+        // 导出为Excel格式（实际上也是CSV，但用.xlsx扩展名）
+        function exportAsExcel(books) {
+            // CSV内容
+            let csvContent = "书名,作者,购买日期,添加日期\n";
+            
+            // 添加数据行
+            books.forEach(book => {
+                const row = [
+                    `"${book.title.replace(/"/g, '""')}"`,
+                    `"${book.author.replace(/"/g, '""')}"`,
+                    `"${book.purchaseDate}"`,
+                    `"${book.addDateDisplay}"`
+                ].join(',');
+                csvContent += row + '\n';
+            });
+            
+            const blob = new Blob(['\ufeff' + csvContent], { type: 'application/vnd.ms-excel;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            
+            const link = document.createElement('a');
+            link.setAttribute('href', url);
+            link.setAttribute('download', `我的书库备份_${new Date().toISOString().split('T')[0]}.xlsx`);
+            link.click();
+            
+            showMessage(`已导出 ${books.length} 本书籍数据 (Excel格式)`, 'success');
+        }
+        
+        // 导入数据
+        function importData() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            
+            // 根据选择的格式设置接受的文件类型
+            if (currentExportFormat === 'json') {
+                input.accept = '.json';
+            } else if (currentExportFormat === 'csv') {
+                input.accept = '.csv,.txt';
+            } else if (currentExportFormat === 'excel') {
+                input.accept = '.xlsx,.xls,.csv';
+            }
+            
+            input.onchange = function(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        let importedBooks = [];
+                        const fileContent = e.target.result;
+                        
+                        if (currentExportFormat === 'json') {
+                            importedBooks = JSON.parse(fileContent);
+                        } else {
+                            // 处理CSV或Excel文件
+                            importedBooks = parseCSV(fileContent);
+                        }
+                        
+                        if (!Array.isArray(importedBooks)) {
+                            throw new Error('数据格式不正确');
+                        }
+                        
+                        if (confirm(`导入 ${importedBooks.length} 本书籍，这会覆盖现有书库数据，确定吗？`)) {
+                            // 为导入的书籍添加ID（如果不存在）
+                            const booksWithIds = importedBooks.map(book => {
+                                if (!book.id) book.id = Date.now() + Math.random();
+                                if (!book.addDateDisplay) {
+                                    book.addDateDisplay = new Date().toLocaleDateString('zh-CN');
+                                }
+                                if (!book.addDate) {
+                                    book.addDate = new Date().toISOString();
+                                }
+                                return book;
+                            });
+                            
+                            localStorage.setItem('myBookLibrary', JSON.stringify(booksWithIds));
+                            updateBookList();
+                            updateStatistics();
+                            showMessage(`成功导入 ${booksWithIds.length} 本书籍`, 'success');
+                        }
+                    } catch (error) {
+                        console.error('导入错误:', error);
+                        showMessage('导入失败：文件格式不正确或内容有误', 'error');
+                    }
+                };
+                
+                reader.readAsText(file);
+            };
+            
+            input.click();
+        }
+        
+        // 解析CSV文件内容 - 修复版
+        function parseCSV(csvText) {
+            const books = [];
+            if (!csvText || csvText.trim() === '') {
+                return books;
+            }
+            
+            const lines = csvText.split(/\r?\n/);
+            
+            // 如果没有数据行，返回空数组
+            if (lines.length === 0) {
+                return books;
+            }
+            
+            // 检查标题行，确定起始行
+            let startIndex = 0;
+            const firstLine = lines[0] || '';
+            if (firstLine.includes('书名') || firstLine.includes('title')) {
+                startIndex = 1;
+            }
+            
+            for (let i = startIndex; i < lines.length; i++) {
+                const line = lines[i].trim();
+                if (!line) continue;
+                
+                // 简单的CSV解析
+                const columns = [];
+                let currentColumn = '';
+                let inQuotes = false;
+                
+                for (let j = 0; j < line.length; j++) {
+                    const char = line[j];
+                    
+                    if (char === '"') {
+                        inQuotes = !inQuotes;
+                    } else if (char === ',' && !inQuotes) {
+                        columns.push(currentColumn.trim());
+                        currentColumn = '';
+                    } else {
+                        currentColumn += char;
+                    }
+                }
+                
+                // 添加最后一列
+                columns.push(currentColumn.trim());
+                
+                // 移除列中的引号
+                const cleanedColumns = columns.map(col => 
+                    col.replace(/^"|"$/g, '')
+                );
+                
+                // 确保至少有书名
+                if (cleanedColumns[0] && cleanedColumns[0] !== '') {
+                    const book = {
+                        title: cleanedColumns[0],
+                        author: cleanedColumns[1] || '未知作者',
+                        purchaseDate: cleanedColumns[2] || new Date().toISOString().split('T')[0]
+                    };
+                    
+                    books.push(book);
+                }
+            }
+            
+            return books;
+        }
+        
+        // 下载模板文件
+        function downloadTemplate() {
+            // 创建模板CSV内容
+            const templateContent = `书名,作者,购买日期
+红楼梦,曹雪芹,2023-10-15
+活着,余华,2023-09-20
+三体,刘慈欣,2023-08-05
+
+注意：
+1. 每行代表一本书
+2. "书名"为必填项
+3. "作者"和"购买日期"为选填项
+4. 购买日期格式：YYYY-MM-DD
+5. 填写后保存为CSV或Excel文件，然后使用导入功能`;
+            
+            const blob = new Blob(['\ufeff' + templateContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            
+            const link = document.createElement('a');
+            link.setAttribute('href', url);
+            link.setAttribute('download', '书籍导入模板.csv');
+            link.click();
+            
+            showMessage('模板文件下载成功', 'success');
+        }
+        
+        // 显示批量添加模态框
+        function showBatchAddModal() {
+            document.getElementById('batchAddModal').style.display = 'flex';
+            document.getElementById('batchAddResult').style.display = 'none';
+            document.getElementById('batchBooksInput').value = '';
+        }
+        
+        // 关闭批量添加模态框
+        function closeBatchAddModal() {
+            document.getElementById('batchAddModal').style.display = 'none';
+        }
+        
+        // 处理批量添加
+        function processBatchAdd() {
+            const inputText = document.getElementById('batchBooksInput').value.trim();
+            if (!inputText) {
+                showMessage('请输入要批量添加的书籍', 'warning');
+                return;
+            }
+            
+            const lines = inputText.split('\n');
+            const books = getBooks();
+            const resultDiv = document.getElementById('batchAddResult');
+            let addedCount = 0;
+            let duplicateCount = 0;
+            let errorCount = 0;
+            let addedBooks = [];
+            
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = '<h4>批量添加结果：</h4>';
+            
+            lines.forEach((line, index) => {
+                const trimmedLine = line.trim();
+                if (!trimmedLine || trimmedLine.startsWith('//') || trimmedLine.startsWith('#')) {
+                    return; // 跳过空行和注释
+                }
+                
+                // 解析行：书名,作者,购买日期
+                const parts = trimmedLine.split(',').map(part => part.trim());
+                const title = parts[0];
+                
+                if (!title) {
+                    errorCount++;
+                    resultDiv.innerHTML += `<div style="color: #f44336; margin: 5px 0;">第${index + 1}行：缺少书名</div>`;
+                    return;
+                }
+                
+                // 检查是否已存在
+                const isDuplicate = books.some(book => 
+                    book.title.toLowerCase() === title.toLowerCase()
+                ) || addedBooks.some(book => 
+                    book.title.toLowerCase() === title.toLowerCase()
+                );
+                
+                if (isDuplicate) {
+                    duplicateCount++;
+                    resultDiv.innerHTML += `<div style="color: #ff9800; margin: 5px 0;">第${index + 1}行：《${title}》已存在，跳过</div>`;
+                    return;
+                }
+                
+                // 创建新书对象
+                const newBook = {
+                    id: Date.now() + index,
+                    title: title,
+                    author: parts[1] || '未知作者',
+                    purchaseDate: parts[2] || new Date().toISOString().split('T')[0],
+                    addDate: new Date().toISOString(),
+                    addDateDisplay: new Date().toLocaleDateString('zh-CN')
+                };
+                
+                addedBooks.push(newBook);
+                addedCount++;
+                resultDiv.innerHTML += `<div style="color: #4CAF50; margin: 5px 0;">第${index + 1}行：《${title}》添加成功</div>`;
+            });
+            
+            // 将所有新书添加到书库
+            if (addedBooks.length > 0) {
+                const allBooks = [...addedBooks, ...books];
+                saveBooks(allBooks);
+                
+                resultDiv.innerHTML += `<hr style="margin: 15px 0;">
+                    <div style="font-weight: bold; margin-top: 10px;">
+                        批量添加完成：
+                        <span style="color: #4CAF50;">成功添加 ${addedCount} 本</span>，
+                        <span style="color: #ff9800;">跳过重复 ${duplicateCount} 本</span>，
+                        <span style="color: #f44336;">错误 ${errorCount} 行</span>
+                    </div>`;
+                
+                // 滚动到结果区域
+                resultDiv.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+        
+        // 显示消息
+        function showMessage(message, type) {
+            // 移除可能存在的旧消息
+            const oldMessage = document.querySelector('.message-alert');
+            if (oldMessage) oldMessage.remove();
+            
+            // 创建新消息
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message-alert fade-in`;
+            messageDiv.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 15px 20px;
+                border-radius: 8px;
+                color: white;
+                font-weight: 600;
+                z-index: 1000;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+                display: flex;
+                align-items: center;
+                max-width: 400px;
+            `;
+            
+            // 根据类型设置颜色
+            if (type === 'success') {
+                messageDiv.style.backgroundColor = '#38b000';
+            } else if (type === 'warning') {
+                messageDiv.style.backgroundColor = '#ff9e00';
+            } else if (type === 'error') {
+                messageDiv.style.backgroundColor = '#e63946';
+            } else {
+                messageDiv.style.backgroundColor = '#4361ee';
+            }
+            
+            // 添加图标
+            let icon = 'info-circle';
+            if (type === 'success') icon = 'check-circle';
+            else if (type === 'warning') icon = 'exclamation-triangle';
+            else if (type === 'error') icon = 'times-circle';
+            
+            messageDiv.innerHTML = `
+                <i class="fas fa-${icon}" style="margin-right: 10px; font-size: 1.2rem;"></i>
+                <span>${message}</span>
+            `;
+            
+            document.body.appendChild(messageDiv);
+            
+            // 3秒后自动消失
+            setTimeout(() => {
+                messageDiv.style.opacity = '0';
+                messageDiv.style.transform = 'translateX(100px)';
+                messageDiv.style.transition = 'all 0.5s ease';
+                
+                setTimeout(() => {
+                    if (messageDiv.parentNode) {
+                        messageDiv.parentNode.removeChild(messageDiv);
+                    }
+                }, 500);
+            }, 3000);
+        }
+    </script>
+</body>
 </html>
